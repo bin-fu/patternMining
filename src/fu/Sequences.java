@@ -60,6 +60,7 @@ public class Sequences {
   protected void store_sequences(String file_path, boolean header, String sep, boolean has_label)
     throws IOException {
     m_sequences = new int[m_num_seqs][];
+    m_labels = new int[m_num_seqs];
     BufferedReader br = new BufferedReader(new FileReader(file_path));
     if (header == true)
       br.readLine();
@@ -106,7 +107,7 @@ public class Sequences {
     while (iter.hasNext()) {
       int id = iter.next();
       sb.append(m_id_event.get(id));
-      sb.append(",");
+      sb.append(":");
     }
     sb.deleteCharAt(sb.length() - 1);
     return sb.toString();

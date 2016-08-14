@@ -41,11 +41,11 @@ class ContrastPattern {
 
   public String toString(){
     StringBuilder sb = new StringBuilder();
-    sb.append(m_sup_positive);
-    sb.append(": ");
-    sb.append(m_sup_negative);
-    sb.append(": ");
-    sb.append(m_lift);
+    sb.append(String.format("%.4f", m_sup_positive));
+    sb.append(", ");
+    sb.append(String.format("%.4f", m_sup_negative));
+    sb.append(", ");
+    sb.append(String.format("%.4f", m_lift));
     return sb.toString();
   }
 

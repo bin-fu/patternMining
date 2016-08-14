@@ -54,13 +54,13 @@ public class CSP {
   public void store_patterns(String file_path) throws IOException {
     int[] orderedIndex = rank_patterns();
     StringBuilder sb = new StringBuilder();
-    sb.append("patterns: positive_support: negative_support: lift\n");
+    sb.append("patterns, positive_support, negative_support, lift\n");
 
     BufferedWriter writer = new BufferedWriter(new FileWriter(file_path));
     for(int i=0;i<orderedIndex.length;i++){
       ContrastPattern p = m_patterns.get(orderedIndex[i]);
       sb.append(m_seqs.ids_to_events(p.m_pattern));
-      sb.append(": ");
+      sb.append(", ");
       sb.append(p.toString());
       sb.append('\n');
     }
@@ -80,7 +80,7 @@ public class CSP {
 
   protected void csp_span(LinkedList<Integer> prefix, int length, LinkedList<int[]> projected) {
 
-    if (projected.size() < m_min_sup_p || projected.size() < m_min_sup_n) {
+    if (projected.size() < m_min_sup_p*m_seqs.m_num_seq_p || projected.size() < m_min_sup_n*m_seqs.m_num_seq_n) {
       return;
     } else {
       // step 1: find all frequent 1-length patterns
@@ -121,11 +121,11 @@ public class CSP {
   protected LinkedList<ContrastPattern> find_frequent_item(LinkedList<int[]> projectedDatabase) {
     // step 1: item count
     int num_events = m_seqs.m_num_events;
-    int[] sup_p = new int[num_events];
+    double[] sup_p = new double[num_events];
     for (int i = 0; i < num_events; i++)
       sup_p[i] = 0;
 
-    int[] sup_n = new int[num_events];
+    double[] sup_n = new double[num_events];
     for (int i = 0; i < num_events; i++)
       sup_n[i] = 0;
 
@@ -163,9 +163,9 @@ public class CSP {
 
 
   public static void main(String[] args) throws IOException {
-    CSP ps = new CSP("D:\\seq.txt", true, ",");
-    ps.search_patterns(0.03, 0.03, 5);
-    ps.store_patterns("D:\\patterns.txt");
+    CSP ps = new CSP("D:/Dropbox/temps/seq_all.txt", true, ",");
+    ps.search_patterns(0.01, 0, 5);
+    ps.store_patterns("D:/Dropbox/temps/patterns.txt");
   }
 }
 
