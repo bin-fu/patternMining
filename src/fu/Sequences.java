@@ -8,7 +8,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
- * Created by ben on 8/12/2016.
+ * the class is an encapsulation of the sequence database, i.e., a set of sequences. each sequence is a ordered list of
+ * events, like (a,b,c,d). In this class, the event is encoded ad represented as Integers. For example, sequence (a,b,c,d)
+ * internally might be represented as (0,1,2,3). We use two dictionaries to hold the mapping from event to id, and
+ * mapping from id to event.
  */
 public class Sequences {
   /** */
@@ -24,6 +27,14 @@ public class Sequences {
   public HashMap<Integer, String> m_id_event;
 
 
+  /**
+   *  generate two dictionaries to hold the mapping from event to id, and mapping from id to event.
+   * @param file_path
+   * @param header
+   * @param sep
+   * @param has_label
+   * @throws IOException
+   */
   protected void dict_item(String file_path, boolean header, String sep, boolean has_label) throws
     IOException {
     m_event_id = new HashMap<String, Integer>();
@@ -57,7 +68,15 @@ public class Sequences {
   }
 
 
-  protected void store_sequences(String file_path, boolean header, String sep, boolean has_label)
+  /**
+   * load the sequences from a external file
+   * @param file_path file path
+   * @param header is the first line of the file is a header
+   * @param sep  delimiter used to separate events
+   * @param has_label  is the first item is the label rather than a event
+   * @throws IOException
+   */
+  protected void load_sequences(String file_path, boolean header, String sep, boolean has_label)
     throws IOException {
     m_sequences = new int[m_num_seqs][];
     m_labels = new int[m_num_seqs];
@@ -92,6 +111,11 @@ public class Sequences {
     br.close();
   }
 
+
+  /**
+   *  generate the initial projected database
+   * @return
+   */
   public LinkedList<int[]> init_projectedDatabase(){
     LinkedList<int[]> result;
     result = new LinkedList<int[]>();
@@ -101,6 +125,12 @@ public class Sequences {
     return result;
   }
 
+
+  /**
+   *  give a list of integers, return the corresponding events concatenated in a comma separated string
+   * @param ids
+   * @return
+   */
   protected String ids_to_events(LinkedList<Integer> ids) {
     StringBuilder sb = new StringBuilder();
     Iterator<Integer> iter = ids.iterator();
@@ -114,6 +144,12 @@ public class Sequences {
   }
 
 
+  /**
+   *  generate a new projected database given a prefix, and current projected database
+   * @param prefix
+   * @param current_projected
+   * @return
+   */
   protected LinkedList<int[]> get_new_projected(LinkedList<Integer> prefix, LinkedList<int[]> current_projected) {
     //
     int item = prefix.getLast();
@@ -132,15 +168,30 @@ public class Sequences {
   }
 
 
+  /**
+   *  constructor for unlabelled sequences
+   * @param file_path
+   * @param header
+   * @param sep
+   * @throws IOException
+   */
   public Sequences(String file_path, boolean header, String sep) throws IOException {
     new Sequences(file_path,header,sep,false);
   }
 
 
+  /**
+   *  constructor for labelled sequences
+   * @param file_path
+   * @param header
+   * @param sep
+   * @param has_label
+   * @throws IOException
+   */
   public Sequences(String file_path, boolean header, String sep, boolean has_label) throws
     IOException {
     dict_item(file_path, header, sep, has_label);
-    store_sequences(file_path, header, sep, has_label);
+    load_sequences(file_path, header, sep, has_label);
   }
 
   public static void main(String[] args) throws IOException {
